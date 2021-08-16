@@ -13,5 +13,5 @@ SciPy's funtion: https://docs.scipy.org/doc/scipy/reference/generated/scipy.lina
 
 
 ### Additional work
-Python is smart enough to know which diagonalization function to call. I have tested it against the LAPACK's DOUBLE PRECISION version of the diagonalization routine. If numpy.random.rand() populates the matrices with single precision numbers, than a fair comparsion would be with SSYEV, jot DSYEV, and you can add another 2x factor of speedup, making Fortran almost 10x faster.
+Python is smart enough to know which diagonalization function to call. I have tested it against the LAPACK's DOUBLE PRECISION version of the diagonalization routine. If numpy.random.rand() populates the matrices with single precision numbers, than a fair comparsion would be with SSYEV, not DSYEV, and you can add another 2x factor of speedup, making Fortran almost 10x faster.
 
