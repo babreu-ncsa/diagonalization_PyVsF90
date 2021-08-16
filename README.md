@@ -2,7 +2,7 @@
 Performance comparison between SciPy's linalg.eigh and LAPACK's DSYEV
 
 ### Notes
-I ran these codes on AKD EPYC 7742 nodes. The Fortran version is (5.4 +- 2.8)x faster than the Python version for 100 NxN random matrices, with N from 200 to 3200.
+I ran these codes on AMD EPYC 7742 nodes. The Fortran version is (5.4 +- 2.8)x faster than the Python version for 100 NxN random matrices, with N from 200 to 3200.
 
 - Fortran: compiled with Intel's ifort 2019.144.1, using MKL.
 - Python: v3.8.5, SciPy v1.5.2
