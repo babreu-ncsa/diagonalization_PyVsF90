@@ -44,7 +44,9 @@ program diagonalize
     enddo
 
     open(unit=12, file="diag-timing.dat", action="write", status="new")
-    write(12,*) t
+    do i = 1, samples
+        write(12,*) t(:,i)
+    enddo
 
     deallocate(t)
 end program diagonalize
