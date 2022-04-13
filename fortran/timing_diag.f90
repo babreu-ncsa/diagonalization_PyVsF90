@@ -1,46 +1,52 @@
 program diagonalize
     use, intrinsic :: iso_fortran_env
     implicit none
-    INTEGER :: m, samples, iterations
+
+    ! control/input variables
+    integer :: m                ! order of matrix
+    integer :: iterations       ! number of iterations, m=m*2 at each
+    integer :: samples          ! number of samples at each iteration
     parameter (samples = 100)
     parameter (iterations = 5)
-    DOUBLE PRECISION, allocatable :: matrix(:,:), eigvecs(:,:)
-    DOUBLE PRECISION, allocatable :: eigvals(:)
-    INTEGER :: i,j,k,l
-    REAL :: startT, endT  !! timing parameters
-    DOUBLE PRECISION, allocatable :: execT(:)     !! timing vector
-    DOUBLE PRECISION :: rn       !! random number
 
-    allocate(execT(iterations))
-    execT = 0.0
+    ! linear algebra variables
+    double precision, allocatable :: matrix(:,:), eigvecs(:,:) 
+    double precision, allocatable :: eigvals(:)
+
+    ! helpers
+    integer :: i,j,k,l
+    double precision :: startT, endT            ! trigger stopwatch points
+    double precision, allocatable :: t(:,:)     ! timing matrix
+
+    allocate(t(iterations,samples))
+    t = 0.d0
     m = 200
 
     call random_seed()
     do i = 1, iterations
+        allocate(matrix(m,m))
+        allocate(eigvecs(m,m))
+        allocate(eigvals(m))
+
         do j = 1, samples
-            allocate(matrix(m,m))
-            allocate(eigvecs(m,m))
-            allocate(eigvals(m))
-            matrix = 0.0
-            do k = 1, m
-                do l = k, m
-                    call random_number(rn)
-                    matrix(l,k) = rn
-                enddo
-            enddo
+            call random_number(matrix)
+
             call cpu_time(startT)
             call hermitean_diagonalization(matrix,m,eigvals,eigvecs)
             call cpu_time(endT)
-            execT(i) = execT(i) + (endT - startT)
-            deallocate(matrix)
-            deallocate(eigvals)
-            deallocate(eigvecs)
-            write(*,*) 'm = ', m, 'iteration: ', j
-        enddo
-        m = m*2
-    enddo
-    write(*,*) execT
 
+            t(i,j) = endT - startT
+        enddo
+
+        m = m*2
+        deallocate(matrix, eigvals, eigvecs)
+
+    enddo
+
+    open(unit=12, file="diag-timing.dat", action="write", status="new")
+    write(12,*) t
+
+    deallocate(t)
 end program diagonalize
 
 subroutine hermitean_diagonalization(matrix,ord,eigvals,eigvecs)
