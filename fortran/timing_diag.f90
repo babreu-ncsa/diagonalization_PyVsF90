@@ -1,5 +1,6 @@
 program diagonalize
     use, intrinsic :: iso_fortran_env
+    use :: omp_lib
     implicit none
 
     ! control/input variables
@@ -31,9 +32,9 @@ program diagonalize
         do j = 1, samples
             call random_number(matrix)
 
-            call cpu_time(startT)
+            startT = omp_get_wtime()
             call hermitean_diagonalization(matrix,m,eigvals,eigvecs)
-            call cpu_time(endT)
+            endT = omp_get_wtime()
 
             t(i,j) = endT - startT
         enddo
